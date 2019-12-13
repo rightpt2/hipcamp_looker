@@ -8,6 +8,8 @@ import urllib.request
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+import pdb
+
 class LookerApi(object):
 
     def __init__(self, token, secret, host):
@@ -20,13 +22,21 @@ class LookerApi(object):
         self.session.verify = False
         self.session.trust_env = False
 
+        #added the port manully
+        # self.porrt = 
+
         self.auth()
 
     def auth(self):
+        pdb.set_trace()
         url = '{}{}'.format(self.host,'login')
+
+        #url = f'https://{self.host}:{self.port}/api/3.0/login'
+
         params = {'client_id':self.token,
                   'client_secret':self.secret}
         r = self.session.post(url,params=params)
+        print(r)
         access_token = r.json().get('access_token')
         # print(access_token)
         head = {'Authorization': 'token {}'.format(access_token)}
@@ -153,7 +163,7 @@ class LookerApi(object):
             return r.json()
         else:
             return r
-        
+
       #GET      queries/run/
     def run_query(self,query_id):
             url = '{}{}/{}/run/json'.format(self.host,'queries',query_id)
